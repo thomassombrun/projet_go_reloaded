@@ -42,7 +42,7 @@ func TestProcess(t *testing.T) {
 	tests := []struct{ in, want string }{
 		{"1E (hex) files were added", "30 files were added"},
 		{"It has been 10 (bin) years", "It has been 2 years"},
-		{"Ready, set, go (up) !", "Ready, set, GO !"},
+		{"Ready, set, go (up) !", "Ready, set, GO!"},
 		{"I should stop SHOUTING (low)", "I should stop shouting"},
 		{"Welcome to the Brooklyn bridge (cap)", "Welcome to the Brooklyn Bridge"},
 		{"This is so exciting (up, 2)", "This is SO EXCITING"},
@@ -52,6 +52,21 @@ func TestProcess(t *testing.T) {
 		got := Process(tc.in)
 		if got != tc.want {
 			t.Errorf("Process(%q) = %q, want %q", tc.in, got, tc.want)
+		}
+	}
+}
+
+func TestPonctuation(t *testing.T) {
+	tests := []struct{ in, want string }{
+		{"Hello , world", "Hello, world"},
+		{"I was sitting over there ,and then BAMM !!", "I was sitting over there, and then BAMM!!"},
+		{"I was thinking ... You were right", "I was thinking... You were right"},
+		{"What ?! Really", "What?! Really"},
+	}
+	for _, tc := range tests {
+		got := CorrigePonctuation(tc.in)
+		if got != tc.want {
+			t.Errorf("CorrigePonctuation(%q) = %q, want %q", tc.in, got, tc.want)
 		}
 	}
 }

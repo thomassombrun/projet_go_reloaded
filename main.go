@@ -85,6 +85,12 @@ func CorrigeApostrophes(texte string) string {
 				}
 				ouvert = false
 			}
+		} else if ouvert && strings.HasPrefix(mot, "'") && strings.Trim(mot[1:], ".,!?:;") == "" {
+			// apostrophe fermante suivie de ponctuation (ex : "'.") : on colle le tout au dernier mot
+			if len(resultat) > 0 {
+				resultat[len(resultat)-1] += mot
+			}
+			ouvert = false
 		} else {
 			// mot normal : s'il vient juste après une apostrophe ouvrante,
 			// on ajoute "'" devant
@@ -159,12 +165,23 @@ func Process(texte string) string {
 	return CorrigePonctuation(CorrigeApostrophes(CorrigeArticles(strings.Join(resultat, " "))))
 }
 
+// CorrigeArticles transforme "a" en "an" quand le mot suivant commence par une voyelle ou un h
+// Exemple : "a apple" devient "an apple", "A hour" devient "An hour"
 func CorrigeArticles(texte string) string {
 	mots := strings.Fields(texte)
+	// len(mots)-1 : on s'arrête avant le dernier mot, car il n'a pas de mot suivant
 	for i := 0; i < len(mots)-1; i++ {
-		// si mots[i] vaut "a" ou "A"
-		// ET que mots[i+1] commence par une voyelle ou par h :
-		//    remplace mots[i] par "an" (ou "An" si c'était "A")
+		if mots[i] == "a" || mots[i] == "A" {
+			// première lettre du mot suivant (les mots de Fields ne sont jamais vides)
+			premiere := []rune(mots[i+1])[0]
+			if strings.ContainsRune("aeiouhAEIOUH", premiere) {
+				if mots[i] == "a" {
+					mots[i] = "an"
+				} else {
+					mots[i] = "An" // on garde la majuscule
+				}
+			}
+		}
 	}
 	return strings.Join(mots, " ")
 }

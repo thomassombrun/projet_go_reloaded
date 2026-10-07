@@ -50,6 +50,7 @@ func TestProcess(t *testing.T) {
 		{"I am exactly how they describe me: ' awesome '", "I am exactly how they describe me: 'awesome'"},
 		{"I was sitting over there ,and then BAMM !!", "I was sitting over there, and then BAMM!!"},
 		{"I was thinking ... You were right", "I was thinking... You were right"},
+		{"If I make you breakfast in bed just say thanks instead of: 'I am nothing without you'. Simply add 66 and 2 and you will see the result is 68. There is no greater agony than bearing a untold story inside you.", "If I make you breakfast in bed just say thanks instead of: 'I am nothing without you'. Simply add 66 and 2 and you will see the result is 68. There is no greater agony than bearing an untold story inside you."},
 	}
 	for _, tc := range tests {
 		got := Process(tc.in)

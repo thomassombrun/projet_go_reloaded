@@ -66,6 +66,38 @@ func CorrigePonctuation(texte string) string {
 	return string(out)
 }
 
+func CorrigeApostrophes(texte string) string {
+	mots := strings.Fields(texte)
+	resultat := []string{}
+	ouvert := false  // true quand on est entre deux apostrophes
+	aColler := false // true si l'apostrophe ouvrante doit être collée au mot suivant
+
+	for _, mot := range mots {
+		if mot == "'" {
+			if !ouvert {
+				// première apostrophe : elle ira devant le mot suivant
+				ouvert = true
+				aColler = true
+			} else {
+				// deuxième apostrophe : on la colle derrière le dernier mot de resultat
+				if len(resultat) > 0 {
+					resultat[len(resultat)-1] = resultat[len(resultat)-1] + "'"
+				}
+				ouvert = false
+			}
+		} else {
+			// mot normal : s'il vient juste après une apostrophe ouvrante,
+			// on ajoute "'" devant
+			if aColler {
+				mot = "'" + mot
+				aColler = false
+			}
+			resultat = append(resultat, mot)
+		}
+	}
+	return strings.Join(resultat, " ")
+}
+
 // Process applique toutes les modifications au texte et renvoie le résultat //
 func Process(texte string) string {
 	// découpe le texte en mots (séparés par des espaces) //
@@ -124,7 +156,7 @@ func Process(texte string) string {
 		}
 	}
 	// recolle les mots avec un espace entre chacun et corrige la ponctuation //
-	return CorrigePonctuation(strings.Join(resultat, " "))
+	return CorrigePonctuation(CorrigeApostrophes(strings.Join(resultat, " ")))
 }
 
 func main() {

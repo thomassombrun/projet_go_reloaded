@@ -47,6 +47,9 @@ func TestProcess(t *testing.T) {
 		{"Welcome to the Brooklyn bridge (cap)", "Welcome to the Brooklyn Bridge"},
 		{"This is so exciting (up, 2)", "This is SO EXCITING"},
 		{"Welcome to the Brooklyn bridge is nice (cap, 3)", "Welcome to the Brooklyn Bridge Is Nice"},
+		{"I am exactly how they describe me: ' awesome '", "I am exactly how they describe me: 'awesome'"},
+		{"I was sitting over there ,and then BAMM !!", "I was sitting over there, and then BAMM!!"},
+		{"I was thinking ... You were right", "I was thinking... You were right"},
 	}
 	for _, tc := range tests {
 		got := Process(tc.in)
@@ -67,6 +70,20 @@ func TestPonctuation(t *testing.T) {
 		got := CorrigePonctuation(tc.in)
 		if got != tc.want {
 			t.Errorf("CorrigePonctuation(%q) = %q, want %q", tc.in, got, tc.want)
+		}
+	}
+}
+
+func TestApostrophes(t *testing.T) {
+	tests := []struct{ in, want string }{
+		{"I am exactly how they describe me: ' awesome '", "I am exactly how they describe me: 'awesome'"},
+		{"As Elton John said: ' I am the most well-known homosexual in the world '", "As Elton John said: 'I am the most well-known homosexual in the world'"},
+		{"hello ' world ' and ' bye '", "hello 'world' and 'bye'"},
+	}
+	for _, tc := range tests {
+		got := CorrigeApostrophes(tc.in)
+		if got != tc.want {
+			t.Errorf("CorrigeApostrophes(%q) = %q, want %q", tc.in, got, tc.want)
 		}
 	}
 }

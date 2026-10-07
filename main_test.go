@@ -87,3 +87,17 @@ func TestApostrophes(t *testing.T) {
 		}
 	}
 }
+
+func TestArticles(t *testing.T) {
+	tests := []struct{ in, want string }{
+		{"There it was. A amazing rock!", "There it was. An amazing rock!"},
+		{"a apple and a banana", "an apple and a banana"},
+		{"a hour", "an hour"},
+	}
+	for _, tc := range tests {
+		got := CorrigeArticles(tc.in)
+		if got != tc.want {
+			t.Errorf("CorrigeArticles(%q) = %q, want %q", tc.in, got, tc.want)
+		}
+	}
+}

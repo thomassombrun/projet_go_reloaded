@@ -156,7 +156,17 @@ func Process(texte string) string {
 		}
 	}
 	// recolle les mots avec un espace entre chacun et corrige la ponctuation //
-	return CorrigePonctuation(CorrigeApostrophes(strings.Join(resultat, " ")))
+	return CorrigePonctuation(CorrigeApostrophes(CorrigeArticles(strings.Join(resultat, " "))))
+}
+
+func CorrigeArticles(texte string) string {
+	mots := strings.Fields(texte)
+	for i := 0; i < len(mots)-1; i++ {
+		// si mots[i] vaut "a" ou "A"
+		// ET que mots[i+1] commence par une voyelle ou par h :
+		//    remplace mots[i] par "an" (ou "An" si c'était "A")
+	}
+	return strings.Join(mots, " ")
 }
 
 func main() {

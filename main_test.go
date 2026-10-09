@@ -51,6 +51,17 @@ func TestProcess(t *testing.T) {
 		{"I was sitting over there ,and then BAMM !!", "I was sitting over there, and then BAMM!!"},
 		{"I was thinking ... You were right", "I was thinking... You were right"},
 		{"If I make you breakfast in bed just say thanks instead of: 'I am nothing without you'. Simply add 66 and 2 and you will see the result is 68. There is no greater agony than bearing a untold story inside you.", "If I make you breakfast in bed just say thanks instead of: 'I am nothing without you'. Simply add 66 and 2 and you will see the result is 68. There is no greater agony than bearing an untold story inside you."},
+		{"", ""},
+		{"go (up, 10)", "GO"},        // plus de mots demandés que disponibles
+		{"ZZ (hex) done", "ZZ done"}, // pas un nombre hexa : le mot reste inchangé
+		{"1010 (bin) and ff (hex)", "10 and 255"}, // hexa en minuscules accepté
+		{"hello (cap) (up)", "HELLO"},             // deux marqueurs à la suite
+		{"hello    world", "hello world"},         // espaces multiples
+		{"' hello world '", "'hello world'"},      // apostrophes autour de plusieurs mots
+		{"don't stop", "don't stop"},              // apostrophe dans un mot : on n'y touche pas
+		{"I was thinking ... You were right", "I was thinking... You were right"},
+		{"Hello ,world", "Hello, world"},
+		{"a hour", "an hour"},
 	}
 	for _, tc := range tests {
 		got := Process(tc.in)
